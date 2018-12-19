@@ -1,6 +1,7 @@
 # dailyfresh
 
-###项目框架搭建
+###项目框架搭建   
+
 1.新建虚拟环境：mkvirtualenv dailyfresh   
 
 2.进入虚拟环境:workon dailyfresh   
