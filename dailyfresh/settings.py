@@ -122,3 +122,12 @@ TINYMCE_DEFAULT_CONFIG = {
     "width":600,
     "height":400
 }
+
+#发送邮件配置
+EMAIL_HOST = "smtp.163.com"  # SMTP服务器主机
+EMAIL_PORT = 25             # 端口
+EMAIL_HOST_USER = "18875037237@163.com"       # 邮箱地址
+EMAIL_HOST_PASSWORD = "admin123"    # 密码
+EMAIL_USE_TLS= False
+EMAIL_FROM = "天天生鲜<18875037237@163.com>"            # 发件人邮箱地址
+
