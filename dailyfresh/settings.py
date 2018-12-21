@@ -131,3 +131,17 @@ EMAIL_HOST_PASSWORD = "admin123"    # 密码
 EMAIL_USE_TLS= False
 EMAIL_FROM = "天天生鲜<18875037237@163.com>"            # 发件人邮箱地址
 
+#django的缓存配置
+CACHES = {
+    "default":{
+        "BACKEND":"django_redis.cache.RedisCache",
+        "LOCATION":"redis://:plmokn10241118@127.0.0.1:6379/9",
+        "OPTIONS":{
+            "CLIENT_CLASS":"django_redis.client.DefaultClient",
+        }
+    }
+}
+
+#配置session的存储
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
