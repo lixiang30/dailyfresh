@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 import time
 from celery_tasks.tasks import send_register_active_email
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from utils.mixin import LoginRequiredMixin
 
 def register(request):
@@ -180,10 +180,26 @@ class LoginView(View):
             return render(request,'login.html',{"errmsg":"用户名或密码错误"})
         #返回应答
 
+class LogoutView(View):
+    """退出登录"""
+    def get(self,request):
+        """退出登录"""
+        #清除用户的session信息
+        logout(request)
+        return redirect(reverse('goods:index'))
+
+
+
 class UserInfoView(LoginRequiredMixin, View):
     """用户中心－信息页"""
     def get(self,request):
         """显示"""
+        #page='user'
+        #request.user
+        #如果用户未登录→AnonymousUser类的一个实例
+        #如果用户登录→User类的一个实例
+        #未登录request.user.authenticated()返回False,登陆了的话返回Ｔrue
+        #除了你给模板文件传递的模板变量之外，django框架会把request.user也传给模板文件
         return render(request,"user_center_info.html",{"page":"user"})
 
 class UserOrderView(LoginRequiredMixin, View):
