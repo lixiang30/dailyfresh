@@ -8,11 +8,11 @@ urlpatterns = [
     url(r'^active/(?P<token>.*)$',ActiveView.as_view(),name='active'),
     url(r'^login$',LoginView.as_view(),name='login'),
 
-    # url(r'^$',UserInfoView.as_view(),name='user'),
-    # url(r'^order$',UserOrderView.as_view(),name='order'),
-    # url(r'^address$',AddressView.as_view(),name="address"),
+    url(r'^$',UserInfoView.as_view(),name='user'),
+    url(r'^order$',UserOrderView.as_view(),name='order'),
+    url(r'^address$',AddressView.as_view(),name="address"),#登录验证，采用LoginRequiredMixin
 
-    url(r'^$',login_required(UserInfoView.as_view()),name='user'),
-    url(r'^order$',login_required(UserOrderView.as_view()),name='order'),
-    url(r'^address$',login_required(AddressView.as_view()),name="address"),
+    # url(r'^$',login_required(UserInfoView.as_view()),name='user'),
+    # url(r'^order$',login_required(UserOrderView.as_view()),name='order'),
+    # url(r'^address$',login_required(AddressView.as_view()),name="address"),#登录验证，采用login_requiered()和配置全局LOGIN_URL
 ]
