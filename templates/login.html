@@ -20,6 +20,7 @@
 				</div>
 				<div class="form_input">
 					<form method="post">
+                        {# 不设置表单action时，提交表单，会向浏览器的地址栏中的地址提交数据 #}
                         {% csrf_token %}
 						<input type="text" name="username" value="{{ username }}" class="name_input" placeholder="请输入用户名">
 						<div class="user_error">输入错误</div>
