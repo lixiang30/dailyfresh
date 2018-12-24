@@ -13,6 +13,9 @@ import time
 from celery_tasks.tasks import send_register_active_email
 from django.contrib.auth import authenticate,login,logout
 from utils.mixin import LoginRequiredMixin
+from django_redis import get_redis_connection
+from goods.models import GoodsSKU
+
 
 def register(request):
     """用户注册"""
@@ -59,6 +62,7 @@ def register(request):
         # 4.返回应答
         return redirect(reverse('goods:index'))
 
+
 class RegisterView(View):
     def get(self,request):
         return render(request,"register.html")
@@ -104,7 +108,6 @@ class RegisterView(View):
         send_register_active_email.delay(email,username,token)
         # 4.返回应答
         return redirect(reverse('goods:index'))
-
 
 
 class ActiveView(View):
@@ -201,11 +204,41 @@ class UserInfoView(LoginRequiredMixin, View):
         #未登录request.user.authenticated()返回False,登陆了的话返回Ｔrue
 
         # 获取用户的个人信息
+        user = request.user
+        address = Address.objects.get_default_address(user)
 
-        #获取用户的历史浏览记录
+        # 获取用户的历史浏览记录
+        # from redis import StrictRedis
+        # sr = StrictRedis(host='172.16.179.130', port='6379', db=9)
+        con = get_redis_connection('default')
+
+        history_key = 'history_%d' % user.id
+
+        # 获取用户最新浏览的5个商品的id
+        sku_ids = con.lrange(history_key, 0, 4)  # [2,3,1]
+
+        # 从数据库中查询用户浏览的商品的具体信息
+        # goods_li = GoodsSKU.objects.filter(id__in=sku_ids)
+        #
+        # goods_res = []
+        # for a_id in sku_ids:
+        #     for goods in goods_li:
+        #         if a_id == goods.id:
+        #             goods_res.append(goods)
+
+        # 遍历获取用户浏览的商品信息
+        goods_li = []
+        for id in sku_ids:
+            goods = GoodsSKU.objects.get(id=id)
+            goods_li.append(goods)
+
+        # 组织上下文
+        context = {'page': 'user',
+                   'address': address,
+                   'goods_li': goods_li}
 
         #除了你给模板文件传递的模板变量之外，django框架会把request.user也传给模板文件
-        return render(request,"user_center_info.html",{"page":"user"})
+        return render(request,"user_center_info.html",context)
 
 class UserOrderView(LoginRequiredMixin, View):
     """用户中心－订单页"""
